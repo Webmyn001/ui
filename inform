@@ -39,7 +39,42 @@ const connectDB = async ()=> {
    }
 }
 
- 
+const s3 = new aws.S3({
+   accessKeyId:"AKIAZ3L472D4CUTLHIVK",
+   secretAccessKey:"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",
+ })
+  
+ const uploadS3 = multer({
+   storage:multerS3({
+     s3: s3,
+     bucket:"webmyn001",
+     acl :"public-read",
+     metadata: function (req, file, cb) {
+       cb(null, {fieldName: file.fieldname})
+     },
+     key: function (req, file, cb) {
+       cb(null, Date.now().toString())
+     }
+   })
+ })
+
+
+
+ app.post('/upload', uploadS3.single('photo'), function(req, res, next) {
+ res.send('succesfully uploaded' + req.files + "files!")
+ console.log(req.files)
+})
+
+
+
+
+
+
+
+
+
+
+
 
 app.use("/api/lessons", lessonRoutes)
 app.use("/api/comment", commentRoutes)
