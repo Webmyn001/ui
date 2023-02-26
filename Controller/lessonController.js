@@ -14,7 +14,6 @@ const cloudinary = require("../Cloudinary/cloudinary")
 const createLesson =  async (req, res, next) => {
   const {Title, Subtitle, Body1, Body2, Body3, Body4, image1, } = req.body
   var image = req.body.image1
-  console.log(req.body)
       try{
           // uploading first image to cloud
           const firstimg = await cloudinary.uploader.upload(image,
