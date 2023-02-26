@@ -2,7 +2,7 @@ const Lesson = require("../Models/lessonModels")
 const mongoose = require('mongoose')
 const multer = require('multer')
 const fs = require('fs')
-
+const cloudinary = require("../Cloudinary/cloudinary")
 
 
 
@@ -11,44 +11,45 @@ const fs = require('fs')
 
 
 // create new lesson
-const createLesson =  (req, res) => {
- console.log(req.files.image1[0].filename)
- let lesson = new Lesson({
-   Title: req.body.Title,
-   Subtitle: req.body.Subtitle,
-   Body1: req.body.Body1,
-   Body2: req.body.Body2,
-   Body3: req.body.Body3,
-   image1: {
-     data: fs.readFileSync('Images/' + req.files.image1[0].filename),
-     contentType: "image/png",
-   },
-   image2: {
-     data: fs.readFileSync('Images/' + req.files.image2[0].filename),
-     contentType: "image/png",
-   },
-   image3: {
-    data: fs.readFileSync('Images/' + req.files.image3[0].filename),
-    contentType: "image/png",
-  },
-   Body4: req.body.Body4,
-  
+const createLesson =  async (req, res, next) => {
+  const {Title, Subtitle, Body1, Body2, Body3, Body4, image1, } = req.body
+  var image = req.body.image1
+  console.log(req.body)
+      try{
+          // uploading first image to cloud
+          const firstimg = await cloudinary.uploader.upload(image,
+            {
+              folder:"Images"
+            })
+          //  uploading second image to cloud
+           
+         
+           
+        const lesson = await Lesson.create({
+          Title,
+          Subtitle,
+          Body1,
+          Body2,
+          Body3,
+          image1 :{
+           public_id: firstimg.public_id,
+           url: firstimg.url
+          },
+          
+          Body4
+        })
+        res.status(201).json({
+          success: true,
+          lesson
+        })
+      }
+      catch (error) {
+          console.log(error);
+          next(error);
+      }
+  }
 
- })
- 
-
- lesson.save()
-     .then(lesson => {
-         res.status(201).json(lesson);
-     })
-     .catch(err => {
-         res.status(404).send('adding new todo failed');
-     });
-
-}
-
-
- 
+    
  // get all lessons
 
  const getLessons = async (req,res) => {

@@ -23,24 +23,16 @@ let Lesson = new Schema({
     },
     image1: 
     {
-        data: Buffer,
-        contentType: String,
-        
-
-    },
-    image2: 
-    {
-        data: Buffer,
-        contentType: String,
-        
-    },
-    image3: 
-    {
-        data: Buffer,
-        contentType: String,
-        
-
-    },
+        public_id:{
+         type: String,
+         
+        },
+        url: {
+          type:String,
+         
+        }
+         
+     },
     
     Body4: {
         type: String,
