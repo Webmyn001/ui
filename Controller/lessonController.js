@@ -13,16 +13,23 @@ const cloudinary = require("../Cloudinary/cloudinary")
 // create new lesson
 const createLesson =  async (req, res, next) => {
   const {Title, Subtitle, Body1, Body2, Body3, Body4, image1, } = req.body
-  var image = req.body.image1
       try{
           // uploading first image to cloud
-          const firstimg = await cloudinary.uploader.upload(image,
+          const firstimg = await cloudinary.uploader.upload(req.body.image1,
             {
               folder:"Images"
             })
           //  uploading second image to cloud
            
-         
+          const secondimg = await cloudinary.uploader.upload(req.body.image2,
+            {
+              folder:"Images"
+            })
+
+            const Thirdimg = await cloudinary.uploader.upload(req.body.image3,
+              {
+                folder:"Images"
+              })
            
         const lesson = await Lesson.create({
           Title,
@@ -31,9 +38,17 @@ const createLesson =  async (req, res, next) => {
           Body2,
           Body3,
           image1 :{
-           public_id: firstimg.public_id,
-           url: firstimg.url
-          },
+            public_id: firstimg.public_id,
+            url: firstimg.url
+           },
+           image2 :{
+            public_id: secondimg.public_id,
+            url: secondimg.url
+           },
+           image3 :{
+            public_id: Thirdimg.public_id,
+            url: Thirdimg.url
+           },
           
           Body4
         })

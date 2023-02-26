@@ -33,6 +33,31 @@ let Lesson = new Schema({
         }
          
      },
+     image2: 
+     {
+         public_id:{
+          type: String,
+          
+         },
+         url: {
+           type:String,
+          
+         }
+          
+      },
+
+      image3: 
+      {
+          public_id:{
+           type: String,
+           
+          },
+          url: {
+            type:String,
+           
+          }
+           
+       },
     
     Body4: {
         type: String,
